@@ -11,7 +11,7 @@ import { headers } from "next/headers";
 
 export const metadata = {
   title: "Izeat",
-  description: "Share good moments with good people",
+  description: "Share good food with good people",
 };
 
 const font = Roboto({
