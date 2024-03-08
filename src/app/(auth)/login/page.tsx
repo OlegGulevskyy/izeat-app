@@ -7,7 +7,6 @@ import { supabase } from "~/server/supabase/supabaseClient";
 import { DevLoginButtons } from "../_components/DevLoginButtons";
 
 const Page = () => {
-
   const signInWithOauth = (provider: Provider) => {
     void supabase().auth.signInWithOAuth({
       provider: provider,
