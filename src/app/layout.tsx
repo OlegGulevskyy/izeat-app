@@ -1,8 +1,27 @@
-import { Providers } from "~/providers";
-import { AuthProvider } from "~/providers/AuthProvider/AuthProvider";
-import { TRPCReactProvider } from "~/trpc/react";
+/* eslint-disable perfectionist/sort-imports */
+import "src/styles/global.css";
+
+// i18n
+import "src/locales/i18n";
+
+import { Providers } from "src/providers";
+import { AuthProvider } from "src/providers/AuthProvider/AuthProvider";
+import { TRPCReactProvider } from "src/trpc/react";
 import { headers } from "next/headers";
-import { getServerUser } from "~/utils/auth";
+import { getServerUser } from "src/utils/auth";
+import { primaryFont } from "src/theme/typography";
+import { LocalizationProvider } from "src/locales";
+import { SettingsDrawer, SettingsProvider } from "src/components/settings";
+import ThemeProvider from "src/theme";
+import { MotionLazy } from "src/components/animate/motion-lazy";
+import ProgressBar from "~/components/progress-bar";
+
+export const viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata = {
   title: "Izeat",
@@ -14,13 +33,27 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <html lang="en">
+      <html lang="en" className={primaryFont.className}>
         <head />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <body>
           <TRPCReactProvider headers={headers()}>
             <AuthProvider {...user}>
-              <Providers>{children}</Providers>
+              <LocalizationProvider>
+                <SettingsProvider
+                  defaultSettings={{
+                    themeMode: "light", // 'light' | 'dark'
+                  }}
+                >
+                  <ThemeProvider>
+                    <MotionLazy>
+                      <SettingsDrawer />
+                      <ProgressBar />
+                      <Providers>{children}</Providers>
+                    </MotionLazy>
+                  </ThemeProvider>
+                </SettingsProvider>
+              </LocalizationProvider>
             </AuthProvider>
           </TRPCReactProvider>
         </body>
