@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material/styles";
+import { type Theme } from "@mui/material/styles";
 import { buttonClasses } from "@mui/material/Button";
 
 import Iconify from "src/components/iconify";
@@ -40,7 +40,7 @@ const clockIcon = () => (
 );
 
 const desktopTypes = dateList.reduce(
-  (result: Record<string, any>, currentValue) => {
+  (result: Record<string, unknown>, currentValue) => {
     result[`Mui${currentValue}`] = {
       defaultProps: {
         slots: {
@@ -58,7 +58,7 @@ const desktopTypes = dateList.reduce(
 );
 
 const timeTypes = timeList.reduce(
-  (result: Record<string, any>, currentValue) => {
+  (result: Record<string, unknown>, currentValue) => {
     result[`Mui${currentValue}`] = {
       defaultProps: {
         slots: {

@@ -31,8 +31,10 @@ export default function NextAppDirEmotionCacheProvider(
   const [registry] = React.useState(() => {
     const cache = createCache(options);
     cache.compat = true;
+
     const prevInsert = cache.insert;
     let inserted: { name: string; isGlobal: boolean }[] = [];
+
     cache.insert = (...args) => {
       const [selector, serialized] = args;
       if (cache.inserted[serialized.name] === undefined) {
@@ -69,7 +71,7 @@ export default function NextAppDirEmotionCacheProvider(
 
       if (typeof style !== "boolean") {
         if (isGlobal) {
-          globals.push({ name, style });
+          globals.push({ name, style: style as string });
         } else {
           styles += style;
           dataEmotionAttribute += ` ${name}`;

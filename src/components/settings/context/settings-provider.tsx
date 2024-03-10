@@ -7,7 +7,7 @@ import { useLocalStorage } from "src/hooks/use-local-storage";
 
 import { localStorageGetItem } from "src/utils/storage-available";
 
-import { SettingsValueProps } from "../types";
+import { type SettingsValueProps } from "../types";
 import { SettingsContext } from "./settings-context";
 
 // ----------------------------------------------------------------------

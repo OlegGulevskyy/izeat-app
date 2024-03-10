@@ -1,7 +1,7 @@
-import { AvatarProps } from "@mui/material/Avatar";
-import { alpha, Theme } from "@mui/material/styles";
+import { type AvatarProps } from "@mui/material/Avatar";
+import { alpha, type Theme } from "@mui/material/styles";
 import {
-  AvatarGroupProps,
+  type AvatarGroupProps,
   avatarGroupClasses,
 } from "@mui/material/AvatarGroup";
 
@@ -26,6 +26,7 @@ const colorByName = (name: string) => {
   if (["m", "n", "p"].includes(charAt)) return "success";
   if (["q", "s", "t"].includes(charAt)) return "warning";
   if (["v", "x", "y"].includes(charAt)) return "error";
+
   return "default";
 };
 

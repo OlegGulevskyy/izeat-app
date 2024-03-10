@@ -1,6 +1,6 @@
 import { flattenArray } from 'src/utils/flatten-array';
 
-import { NavProps, NavItemBaseProps } from 'src/components/nav-section';
+import type { NavProps, NavItemBaseProps } from 'src/components/nav-section';
 
 // ----------------------------------------------------------------------
 
@@ -34,15 +34,16 @@ type FilterProps = {
 };
 
 export function applyFilter({ inputData, query }: FilterProps) {
+  let copy = [...inputData];
   if (query) {
-    inputData = inputData.filter(
+    copy = inputData.filter(
       (item) =>
         item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
         item.path.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }
 
-  return inputData;
+  return copy;
 }
 
 // ----------------------------------------------------------------------
@@ -97,7 +98,7 @@ export function groupedData(array: ItemProps[]) {
   const group = array.reduce((groups: GroupsProps, item) => {
     groups[item.group] = groups[item.group] || [];
 
-    groups[item.group].push(item);
+    groups[item.group]?.push(item);
 
     return groups;
   }, {});

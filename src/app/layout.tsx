@@ -1,6 +1,4 @@
-/* eslint-disable perfectionist/sort-imports */
 import "src/styles/global.css";
-
 // i18n
 import "src/locales/i18n";
 
