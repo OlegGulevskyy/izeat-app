@@ -9,10 +9,10 @@ const AuthenticatedExample = () => {
   const { data } = api.auth.getProfile.useQuery();
 
   const signOut = async () => {
-    const { data } = await supabase().auth.getUser();
+    const { data: userData } = await supabase().auth.getUser();
     posthog.capture(userEvents.loggedOut, {
-      email: data.user?.email,
-      id: data.user?.id,
+      email: userData.user?.email,
+      id: userData.user?.id,
     });
 
     supabase().auth.signOut();
