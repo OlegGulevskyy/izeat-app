@@ -1,7 +1,12 @@
-"use client";
+import AuthModernLayout from "~/layouts/auth/modern";
+import SupabaseLoginView from "~/views/login/login";
 
 const Page = () => {
-  return <div>Login page</div>;
+  return (
+    <AuthModernLayout>
+      <SupabaseLoginView />
+    </AuthModernLayout>
+  );
 };
 
 export default Page;
