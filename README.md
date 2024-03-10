@@ -27,7 +27,7 @@ It allows us to call database in server components through supabase-js, for clie
 - Run
 
 ```
-pnpm install
+yarn install
 ```
 
 - Copy the .env.example into .env and fill out the envs
@@ -41,14 +41,14 @@ Then go to supabase/config.toml file and change your service name.
 Start the database:
 
 - supabase start
-- pnpm prepare:local
+- yarn prepare:local
 
 ## If you want to develop on remote supabase instance, follow the steps below:
 
 Connect supabase to remote instance:
 
 - supabase link --project-ref <_your_project_id_>
-- pnpm prepare:remote
+- yarn prepare:remote
 
 ## Common steps
 
@@ -63,26 +63,26 @@ Then go to supabase/migrations folder and add your SQL there.
 
 #### If you want to make changes with studio, use
 
-- pnpm db:diff <_migration_name_>
+- yarn db:diff <_migration_name_>
 
 ## Run these initial commands
 
 Every time you change something on local instance:
 
 ```
-pnpm prepare:local
+yarn prepare:local
 ```
 
 - If you develop on cloud supabase run:
 
 ```
-pnpm prepare:remote
+yarn prepare:remote
 ```
 
 - Run the project
 
 ```
-pnpm dev
+yarn dev
 ```
 
 If you are not familiar with the different technologies used in this project, please refer to the respective docs.
