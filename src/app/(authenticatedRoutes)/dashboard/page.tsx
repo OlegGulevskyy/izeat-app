@@ -1,12 +1,20 @@
 "use client";
 
+import posthog from "posthog-js";
+import { userEvents } from "~/libs/posthog";
 import { supabase } from "~/server/supabase/supabaseClient";
 import { api } from "~/trpc/react";
 
 const AuthenticatedExample = () => {
   const { data } = api.auth.getProfile.useQuery();
 
-  const signOut = () => {
+  const signOut = async () => {
+    const { data } = await supabase().auth.getUser();
+    posthog.capture(userEvents.loggedOut, {
+      email: data.user?.email,
+      id: data.user?.id,
+    });
+
     supabase().auth.signOut();
   };
 
