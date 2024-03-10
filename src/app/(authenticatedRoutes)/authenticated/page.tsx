@@ -1,6 +1,5 @@
 "use client";
 
-import { redirect } from "next/navigation";
 import { supabase } from "~/server/supabase/supabaseClient";
 import { api } from "~/trpc/react";
 
@@ -9,7 +8,6 @@ const AuthenticatedExample = () => {
 
   const signOut = () => {
     supabase().auth.signOut();
-    redirect("/");
   };
 
   return (

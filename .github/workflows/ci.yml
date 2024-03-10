@@ -17,15 +17,13 @@ jobs:
       SKIP_ENV_VALIDATION: true
     steps:
       - uses: actions/checkout@v3
-      - uses: pnpm/action-setup@v2
         with:
           version: 8
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
-      - name: Install pnpm
-        run: pnpm install
+      - name: Install packages
+        run: yarn install
       - name: Run Lint
-        run: pnpm lint
+        run: yarn lint
