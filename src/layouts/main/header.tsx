@@ -15,7 +15,7 @@ import Logo from "src/components/logo";
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
 import { HEADER } from "../config-layout";
-import { navConfig } from "./config-navigation";
+import { mobileNavConfig, navConfig } from "./config-navigation";
 import LoginButton from "../common/login-button";
 import HeaderShadow from "../common/header-shadow";
 import SettingsButton from "../common/settings-button";
@@ -72,7 +72,7 @@ export default function Header() {
               }}
             />
 
-            {!mdUp && <NavMobile data={navConfig} />}
+            {!mdUp && <NavMobile data={mobileNavConfig} />}
           </Stack>
         </Container>
       </Toolbar>
