@@ -1,8 +1,3 @@
-// import { getServerUser } from "~/utils/auth";
-
-const Homepage = async () => {
-  // const user = getServerUser();
-  return <main>Hello</main>;
-};
-
-export default Homepage;
+export default function Home() {
+  return <div>Hello from home</div>;
+}

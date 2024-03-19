@@ -1,13 +1,16 @@
+import { headers } from "next/headers";
+import { Roboto } from "next/font/google";
+
 import { TailwindIndicator } from "~/components/TailwindIndicator";
 import { Providers } from "~/providers";
-import "~/styles/globals.css";
 import { cn } from "~/utils/cn";
-import { Roboto } from "next/font/google";
 import { Toaster } from "~/components/ui/toaster";
 import { getServerUser } from "~/utils/auth";
 import { AuthProvider } from "~/providers/AuthProvider/AuthProvider";
 import { TRPCReactProvider } from "~/trpc/react";
-import { headers } from "next/headers";
+import { MainLayout } from "~/layouts/main";
+
+import "~/styles/globals.css";
 
 export const metadata = {
   title: "Izeat",
@@ -36,7 +39,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
           <TRPCReactProvider headers={headers()}>
             <AuthProvider {...user}>
               <Providers>
-                {children}
+                <MainLayout>{children}</MainLayout>
                 <Toaster />
               </Providers>
             </AuthProvider>

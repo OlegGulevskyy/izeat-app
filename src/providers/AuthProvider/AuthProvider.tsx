@@ -84,7 +84,7 @@ export const AuthProvider = ({
   return (
     <AuthContext.Provider value={value}>
       {children}
-      <ReactQueryDevtools />
+      <ReactQueryDevtools buttonPosition="top-left" />
     </AuthContext.Provider>
   );
 };
