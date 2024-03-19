@@ -9,16 +9,11 @@ import Link from "next/link";
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
 import { appNav, userNav } from "~/constants/navigation";
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
+import { useUser } from "~/providers/AuthProvider/AuthProvider";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
+  const { user } = useUser();
 
   return (
     <>
@@ -79,7 +74,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={user.imageUrl}
+                            src={user?.user_metadata?.avatar_url ?? ""}
                             alt=""
                           />
                         </Menu.Button>
@@ -158,16 +153,16 @@ export function MainLayout({ children }: PropsWithChildren) {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
+                        src={user?.user_metadata?.avatar_url ?? ""}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">
-                        {user.name}
+                        {user?.user_metadata?.full_name ?? user?.email}
                       </div>
                       <div className="text-sm font-medium text-gray-500">
-                        {user.email}
+                        {user?.email}
                       </div>
                     </div>
                     <button
@@ -209,7 +204,7 @@ export function MainLayout({ children }: PropsWithChildren) {
               {appNav.map((item) => (
                 <Link key={item.name} href={item.href} className="w-full">
                   <Button
-                    className="flex items-center gap-2 w-full"
+                    className="flex w-full items-center gap-2"
                     variant={pathName === item.href ? "default" : "secondary"}
                   >
                     <item.icon className="h-8 w-6" />
