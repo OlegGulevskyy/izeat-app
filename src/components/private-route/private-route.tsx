@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from "react";
 import { getServerUser } from "~/utils/auth";
-import { PrivateRouteBase } from "./PrivateRouteBase";
+import { PrivateRouteBase } from "./private-route-base";
 import { redirect } from "next/navigation";
 
 export const PrivateRoute = async ({ children }: PropsWithChildren) => {

@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { Roboto } from "next/font/google";
 
-import { TailwindIndicator } from "~/components/TailwindIndicator";
+import { TailwindIndicator } from "~/components/tw-indicator";
 import { Providers } from "~/providers";
 import { cn } from "~/utils/cn";
 import { Toaster } from "~/components/ui/toaster";
@@ -32,7 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased flex flex-col h-screen",
+            "flex h-screen min-h-screen flex-col bg-background font-sans antialiased",
             font.className,
           )}
         >

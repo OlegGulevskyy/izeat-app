@@ -1,19 +1,14 @@
 "use client";
 
-import { MessageCircleIcon } from "lucide-react";
 import { Fragment, type PropsWithChildren } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  BellIcon,
-  BuildingStorefrontIcon,
-  HomeIcon,
-  UserIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { usePathname } from "next/navigation";
 
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { appNav, userNav } from "~/constants/navigation";
 
 const user = {
   name: "Tom Cook",
@@ -21,21 +16,13 @@ const user = {
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Messages", href: "/messages" },
-  { name: "Products", href: "/products" },
-  { name: "Profile", href: "/profile" },
-];
-const userNavigation = [
-  { name: "Settings", href: "/settings" },
-  { name: "Sign out", href: "/logout" },
-];
 
 export function MainLayout({ children }: PropsWithChildren) {
+  const pathName = usePathname();
+
   return (
     <>
-      <div className="min-h-full flex flex-col flex-1">
+      <div className="flex min-h-full flex-1 flex-col">
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           {({ open }) => (
             <>
@@ -55,17 +42,19 @@ export function MainLayout({ children }: PropsWithChildren) {
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                      {navigation.map((item) => (
+                      {appNav.map((item) => (
                         <a
                           key={item.name}
                           href={item.href}
                           className={cn(
-                            item.current
+                            item.href === pathName
                               ? "border-indigo-500 text-gray-900"
                               : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                             "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium",
                           )}
-                          aria-current={item.current ? "page" : undefined}
+                          aria-current={
+                            item.href === pathName ? "page" : undefined
+                          }
                         >
                           {item.name}
                         </a>
@@ -105,7 +94,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                         leaveTo="transform opacity-0 scale-95"
                       >
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNavigation.map((item) => (
+                          {userNav.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
                                 <a
@@ -147,18 +136,18 @@ export function MainLayout({ children }: PropsWithChildren) {
 
               <Disclosure.Panel className="sm:hidden">
                 <div className="space-y-1 pb-3 pt-2">
-                  {navigation.map((item) => (
+                  {appNav.map((item) => (
                     <Disclosure.Button
                       key={item.name}
                       as="a"
                       href={item.href}
                       className={cn(
-                        item.current
+                        item.href === pathName
                           ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                           : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
                         "block border-l-4 py-2 pl-3 pr-4 text-base font-medium",
                       )}
-                      aria-current={item.current ? "page" : undefined}
+                      aria-current={item.href === pathName ? "page" : undefined}
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -191,7 +180,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                     </button>
                   </div>
                   <div className="mt-3 space-y-1">
-                    {userNavigation.map((item) => (
+                    {userNav.map((item) => (
                       <Disclosure.Button
                         key={item.name}
                         as="a"
@@ -208,7 +197,7 @@ export function MainLayout({ children }: PropsWithChildren) {
           )}
         </Disclosure>
 
-        <div className="py-10 overflow-y-auto flex-1">
+        <div className="flex-1 overflow-y-auto py-10">
           <main>
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
@@ -217,18 +206,16 @@ export function MainLayout({ children }: PropsWithChildren) {
         <footer className="w-full border-t border-gray-200 bg-white sm:hidden">
           <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between gap-2">
-              <Button className="flex w-full items-center gap-2">
-                <HomeIcon className="h-8 w-6" />
-              </Button>
-              <Button className="flex w-full items-center gap-2">
-                <MessageCircleIcon className="h-8 w-6" />
-              </Button>
-              <Button className="flex w-full items-center gap-2">
-                <BuildingStorefrontIcon className="h-8 w-6" />
-              </Button>
-              <Button className="flex w-full items-center gap-2">
-                <UserIcon className="h-8 w-6" />
-              </Button>
+              {appNav.map((item) => (
+                <Link key={item.name} href={item.href} className="w-full">
+                  <Button
+                    className="flex items-center gap-2 w-full"
+                    variant={pathName === item.href ? "default" : "secondary"}
+                  >
+                    <item.icon className="h-8 w-6" />
+                  </Button>
+                </Link>
+              ))}
             </div>
           </div>
         </footer>

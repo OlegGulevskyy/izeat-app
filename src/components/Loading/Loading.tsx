@@ -1,4 +1,3 @@
-import React from "react";
 import { Icons } from "../Icons/Icons";
 import { type LucideProps } from "lucide-react";
 import { cn } from "~/utils/cn";

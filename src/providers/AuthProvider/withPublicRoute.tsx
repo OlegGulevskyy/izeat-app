@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
-import { LoadingScreen } from "~/components/Loading";
+import { LoadingScreen } from "~/components/loading";
 
 export const withPublicRoute = <T extends object>(
   WrappedComponent: React.FunctionComponent<T>,
