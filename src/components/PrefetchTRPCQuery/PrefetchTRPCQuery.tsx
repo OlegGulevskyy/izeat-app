@@ -17,12 +17,10 @@ type ValueTypeAt<T, P extends string> = P extends `${infer K}.${infer L}`
     : never
   : never;
 
-type ParamsType<T extends AccessPaths<RouterInputs>> = ValueTypeAt<
-  RouterInputs,
-  T
-> extends void | undefined
-  ? { params?: undefined }
-  : { params: ValueTypeAt<RouterInputs, T> };
+type ParamsType<T extends AccessPaths<RouterInputs>> =
+  ValueTypeAt<RouterInputs, T> extends void | undefined
+    ? { params?: undefined }
+    : { params: ValueTypeAt<RouterInputs, T> };
 
 export const PrefetchTRPCQuery = async <T extends AccessPaths<RouterInputs>>({
   children,
