@@ -32,7 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased",
+            "min-h-screen bg-background font-sans antialiased flex flex-col h-screen",
             font.className,
           )}
         >

@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, PropsWithChildren } from "react";
+import { MessageCircleIcon } from "lucide-react";
+import { Fragment, type PropsWithChildren } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -10,9 +11,9 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
-import { MessageCircleIcon } from "lucide-react";
 
 const user = {
   name: "Tom Cook",
@@ -34,7 +35,7 @@ const userNavigation = [
 export function MainLayout({ children }: PropsWithChildren) {
   return (
     <>
-      <div className="min-h-full">
+      <div className="min-h-full flex flex-col flex-1">
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           {({ open }) => (
             <>
@@ -207,25 +208,25 @@ export function MainLayout({ children }: PropsWithChildren) {
           )}
         </Disclosure>
 
-        <div className="py-10">
+        <div className="py-10 overflow-y-auto flex-1">
           <main>
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
 
-        <footer className="absolute bottom-0 left-0 w-full border-t border-gray-200 bg-white sm:hidden">
+        <footer className="w-full border-t border-gray-200 bg-white sm:hidden">
           <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 justify-between gap-2 items-center">
-              <Button className="flex items-center gap-2 w-full">
+            <div className="flex h-16 items-center justify-between gap-2">
+              <Button className="flex w-full items-center gap-2">
                 <HomeIcon className="h-8 w-6" />
               </Button>
-              <Button className="flex items-center gap-2 w-full">
+              <Button className="flex w-full items-center gap-2">
                 <MessageCircleIcon className="h-8 w-6" />
               </Button>
-              <Button className="flex items-center gap-2 w-full">
+              <Button className="flex w-full items-center gap-2">
                 <BuildingStorefrontIcon className="h-8 w-6" />
               </Button>
-              <Button className="flex items-center gap-2 w-full">
+              <Button className="flex w-full items-center gap-2">
                 <UserIcon className="h-8 w-6" />
               </Button>
             </div>
