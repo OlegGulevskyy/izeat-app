@@ -6,13 +6,13 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
 import { supabase } from "~/server/supabase/supabaseClient";
 import { POST_PRODUCT_PATH, appNav, userNav } from "~/constants/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
-import Image from "next/image";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
