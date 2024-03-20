@@ -11,6 +11,7 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { MainLayout } from "~/layouts/main";
 
 import "~/styles/globals.css";
+import st from "./layout.module.css";
 
 export const metadata = {
   title: "Izeat",
@@ -25,6 +26,7 @@ const font = Roboto({
 async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getServerUser();
 
+
   return (
     <>
       <html lang="en">
@@ -32,8 +34,9 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <body
           className={cn(
-            "flex min-h-screen flex-col bg-background font-sans antialiased overflow-y-hidden",
+            "flex flex-col bg-background font-sans antialiased",
             font.className,
+            st.global,
           )}
         >
           <TRPCReactProvider headers={headers()}>

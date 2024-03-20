@@ -22,10 +22,20 @@ export function MainLayout({ children }: PropsWithChildren) {
     supabase().auth.signOut();
     redirect("/");
   };
+  const handleResize = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    console.log("vh", vh);
+  };
+
+  if (typeof window !== "undefined") {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col">
+      <div className="min-h-full flex flex-1 flex-col">
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           {({ open }) => (
             <>
