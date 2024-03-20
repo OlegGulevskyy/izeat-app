@@ -261,7 +261,7 @@ export function MainLayout({ children }: PropsWithChildren) {
           )}
         </Disclosure>
 
-        <div className="flex-1 overflow-y-auto py-10">
+        <div className="flex-1 overflow-y-auto">
           <main>
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
