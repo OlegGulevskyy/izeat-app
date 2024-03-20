@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
@@ -295,6 +296,12 @@ export function MainLayout({ children }: PropsWithChildren) {
           </div>
         </footer>
       </div>
+      <ProgressBar
+        height="8px"
+        color="#5434b7"
+        options={{ showSpinner: true }}
+        shallowRouting
+      />
     </>
   );
 }
