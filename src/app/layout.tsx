@@ -26,7 +26,6 @@ const font = Roboto({
 async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getServerUser();
 
-
   return (
     <>
       <html lang="en">
