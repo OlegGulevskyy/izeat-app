@@ -57,3 +57,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 32px !important;
+  right: 50% !important;
+  transform: translate(-50%, -50%);
+}
