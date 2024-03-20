@@ -1,7 +1,9 @@
+import { ProfileSettingsView } from "~/components/settings/profile";
+
 const ProfileSettings = () => {
   return (
     <div>
-      <h1>Profile Settings</h1>
+      <ProfileSettingsView />
     </div>
   );
 };
