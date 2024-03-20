@@ -8,12 +8,14 @@ import Link from "next/link";
 
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
-import { appNav, userNav } from "~/constants/navigation";
+import { POST_PRODUCT_PATH, appNav, userNav } from "~/constants/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
   const { user } = useUser();
+
+  console.log("user", user);
 
   return (
     <>
@@ -200,17 +202,29 @@ export function MainLayout({ children }: PropsWithChildren) {
 
         <footer className="w-full border-t border-gray-200 bg-white sm:hidden">
           <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 items-center justify-between gap-2">
-              {appNav.map((item) => (
-                <Link key={item.name} href={item.href} className="w-full">
-                  <Button
-                    className="flex w-full items-center gap-2"
-                    variant={pathName === item.href ? "default" : "secondary"}
-                  >
-                    <item.icon className="h-8 w-6" />
-                  </Button>
-                </Link>
-              ))}
+            <div className="flex h-16 items-center">
+              {user ? (
+                <div className="justify-between gap-2">
+                  {appNav.map((item) => (
+                    <Link key={item.name} href={item.href} className="w-full">
+                      <Button
+                        className="flex w-full items-center gap-2"
+                        variant={
+                          pathName === item.href ? "default" : "secondary"
+                        }
+                      >
+                        <item.icon className="h-8 w-6" />
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="mx-auto w-full">
+                  <Link href={POST_PRODUCT_PATH}>
+                    <Button className="w-full">Post product</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </footer>

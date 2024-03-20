@@ -16,3 +16,5 @@ export const userNav = [
   { name: "Settings", href: "/settings" },
   { name: "Sign out", href: "/logout" },
 ];
+
+export const POST_PRODUCT_PATH = "/products/new";
