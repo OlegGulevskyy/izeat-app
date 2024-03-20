@@ -5,9 +5,11 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { cn } from "~/utils/cn";
 import { Button } from "~/components/ui/button";
+import { supabase } from "~/server/supabase/supabaseClient";
 import { POST_PRODUCT_PATH, appNav, userNav } from "~/constants/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
 
@@ -15,7 +17,10 @@ export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
   const { user } = useUser();
 
-  console.log("user", user);
+  const signOut = () => {
+    supabase().auth.signOut();
+    redirect("/");
+  };
 
   return (
     <>
@@ -29,18 +34,18 @@ export function MainLayout({ children }: PropsWithChildren) {
                     <div className="flex flex-shrink-0 items-center">
                       <img
                         className="block h-8 w-auto lg:hidden"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                        src="/assets/logos/Izeat_Logo_Reduced_Purple.svg"
                         alt="Your Company"
                       />
                       <img
                         className="hidden h-8 w-auto lg:block"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                        src="/assets/logos/Izeat_Logo_Full_Purple.svg"
                         alt="Your Company"
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                       {appNav.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
                           href={item.href}
                           className={cn(
@@ -54,61 +59,77 @@ export function MainLayout({ children }: PropsWithChildren) {
                           }
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                    <button
-                      type="button"
-                      className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    {/* Notification button */}
+                    {user && (
+                      <button
+                        type="button"
+                        className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                        <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+                    )}
 
                     {/* Profile dropdown */}
-                    <Menu as="div" className="relative ml-3">
-                      <div>
-                        <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                          <span className="absolute -inset-1.5" />
-                          <span className="sr-only">Open user menu</span>
-                          <img
-                            className="h-8 w-8 rounded-full"
-                            src={user?.user_metadata?.avatar_url ?? ""}
-                            alt=""
-                          />
-                        </Menu.Button>
-                      </div>
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-200"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                          {userNav.map((item) => (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={cn(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700",
+                    {user ? (
+                      <>
+                        <Menu as="div" className="relative ml-3">
+                          <div>
+                            <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                              <span className="absolute -inset-1.5" />
+                              <span className="sr-only">Open user menu</span>
+                              <img
+                                className="h-8 w-8 rounded-full"
+                                src={user?.user_metadata?.avatar_url ?? ""}
+                                alt=""
+                              />
+                            </Menu.Button>
+                          </div>
+                          <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-200"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                          >
+                            <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              {userNav.map((item) => (
+                                <Menu.Item key={item.name}>
+                                  {({ active }) => (
+                                    <Link
+                                      href={item.href}
+                                      className={cn(
+                                        active ? "bg-gray-100" : "",
+                                        "block px-4 py-2 text-sm text-gray-700",
+                                      )}
+                                    >
+                                      {item.name}
+                                    </Link>
                                   )}
-                                >
-                                  {item.name}
-                                </a>
-                              )}
-                            </Menu.Item>
-                          ))}
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
+                                </Menu.Item>
+                              ))}
+                              <Menu.Item>
+                                <Button>Sign out</Button>
+                              </Menu.Item>
+                            </Menu.Items>
+                          </Transition>
+                        </Menu>
+                      </>
+                    ) : (
+                      <div>
+                        <Button asChild className="w-full">
+                          <Link href="/login" className="w-full">Login </Link>
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
@@ -133,62 +154,81 @@ export function MainLayout({ children }: PropsWithChildren) {
 
               <Disclosure.Panel className="sm:hidden">
                 <div className="space-y-1 pb-3 pt-2">
-                  {appNav.map((item) => (
-                    <Disclosure.Button
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className={cn(
-                        item.href === pathName
-                          ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                          : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
-                        "block border-l-4 py-2 pl-3 pr-4 text-base font-medium",
-                      )}
-                      aria-current={item.href === pathName ? "page" : undefined}
-                    >
-                      {item.name}
-                    </Disclosure.Button>
-                  ))}
-                </div>
-                <div className="border-t border-gray-200 pb-3 pt-4">
-                  <div className="flex items-center px-4">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user?.user_metadata?.avatar_url ?? ""}
-                        alt=""
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">
-                        {user?.user_metadata?.full_name ?? user?.email}
-                      </div>
-                      <div className="text-sm font-medium text-gray-500">
-                        {user?.email}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <div className="mt-3 space-y-1">
-                    {userNav.map((item) => (
+                  {appNav
+                    .filter((i) => (!i.isProtected ? true : user))
+                    .map((item) => (
                       <Disclosure.Button
                         key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                        className={cn(
+                          item.href === pathName
+                            ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                            : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
+                          "block w-full border-l-4 py-2 pl-3 pr-4 text-base font-medium",
+                        )}
+                        aria-current={
+                          item.href === pathName ? "page" : undefined
+                        }
                       >
-                        {item.name}
+                        <Link
+                          className="block w-full text-left"
+                          href={item.href}
+                        >
+                          {item.name}
+                        </Link>
                       </Disclosure.Button>
                     ))}
-                  </div>
                 </div>
+                {user ? (
+                  <div className="border-t border-gray-200 pb-3 pt-4">
+                    <div className="flex items-center px-4">
+                      <div className="flex-shrink-0">
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={user.user_metadata?.avatar_url ?? ""}
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-base font-medium text-gray-800">
+                          {user.user_metadata?.full_name ?? user?.email}
+                        </div>
+                        <div className="text-sm font-medium text-gray-500">
+                          {user?.email}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                        <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      </button>
+                    </div>
+                    <div className="mt-3 space-y-1">
+                      {userNav.map((item) => (
+                        <Disclosure.Button
+                          key={item.name}
+                          className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full text-left"
+                        >
+                          <Link href={item.href}>{item.name}</Link>
+                        </Disclosure.Button>
+                      ))}
+                      <Disclosure.Button
+                        onClick={signOut}
+                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full text-left"
+                      >
+                        Sign out
+                      </Disclosure.Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Disclosure.Button className="mb-2 block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full">
+                    <Button className="w-full" asChild>
+                      <Link href="/login">Login</Link>
+                    </Button>
+                  </Disclosure.Button>
+                )}
               </Disclosure.Panel>
             </>
           )}
@@ -204,7 +244,7 @@ export function MainLayout({ children }: PropsWithChildren) {
           <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center">
               {user ? (
-                <div className="justify-between gap-2">
+                <div className="flex w-full flex-row justify-between gap-2">
                   {appNav.map((item) => (
                     <Link key={item.name} href={item.href} className="w-full">
                       <Button
