@@ -12,6 +12,7 @@ import { Button } from "~/components/ui/button";
 import { supabase } from "~/server/supabase/supabaseClient";
 import { POST_PRODUCT_PATH, appNav, userNav } from "~/constants/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
+import Image from "next/image";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
@@ -32,12 +33,16 @@ export function MainLayout({ children }: PropsWithChildren) {
                 <div className="flex h-16 justify-between">
                   <div className="flex">
                     <div className="flex flex-shrink-0 items-center">
-                      <img
+                      <Image
+                        height={32}
+                        width={32}
                         className="block h-8 w-auto lg:hidden"
                         src="/assets/logos/Izeat_Logo_Reduced_Purple.svg"
                         alt="Your Company"
                       />
-                      <img
+                      <Image
+                        height={32}
+                        width={32}
                         className="hidden h-8 w-auto lg:block"
                         src="/assets/logos/Izeat_Logo_Full_Purple.svg"
                         alt="Your Company"
@@ -84,7 +89,9 @@ export function MainLayout({ children }: PropsWithChildren) {
                             <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                               <span className="absolute -inset-1.5" />
                               <span className="sr-only">Open user menu</span>
-                              <img
+                              <Image
+                                height={32}
+                                width={32}
                                 className="h-8 w-8 rounded-full"
                                 src={user?.user_metadata?.avatar_url ?? ""}
                                 alt=""
@@ -126,7 +133,9 @@ export function MainLayout({ children }: PropsWithChildren) {
                     ) : (
                       <div>
                         <Button asChild className="w-full">
-                          <Link href="/login" className="w-full">Login </Link>
+                          <Link href="/login" className="w-full">
+                            Login{" "}
+                          </Link>
                         </Button>
                       </div>
                     )}
@@ -182,7 +191,9 @@ export function MainLayout({ children }: PropsWithChildren) {
                   <div className="border-t border-gray-200 pb-3 pt-4">
                     <div className="flex items-center px-4">
                       <div className="flex-shrink-0">
-                        <img
+                        <Image
+                          width={32}
+                          height={32}
                           className="h-10 w-10 rounded-full"
                           src={user.user_metadata?.avatar_url ?? ""}
                           alt=""
@@ -209,21 +220,21 @@ export function MainLayout({ children }: PropsWithChildren) {
                       {userNav.map((item) => (
                         <Disclosure.Button
                           key={item.name}
-                          className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full text-left"
+                          className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                         >
                           <Link href={item.href}>{item.name}</Link>
                         </Disclosure.Button>
                       ))}
                       <Disclosure.Button
                         onClick={signOut}
-                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full text-left"
+                        className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                       >
                         Sign out
                       </Disclosure.Button>
                     </div>
                   </div>
                 ) : (
-                  <Disclosure.Button className="mb-2 block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 w-full">
+                  <Disclosure.Button className="mb-2 block w-full px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">
                     <Button className="w-full" asChild>
                       <Link href="/login">Login</Link>
                     </Button>
