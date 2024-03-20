@@ -36,7 +36,7 @@ export function MainLayout({ children }: PropsWithChildren) {
 
   return (
     <>
-      <div className="min-h-full flex flex-1 flex-col">
+      <div className="flex min-h-full flex-1 flex-col">
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           {({ open }) => (
             <>
@@ -44,20 +44,24 @@ export function MainLayout({ children }: PropsWithChildren) {
                 <div className="flex h-16 justify-between">
                   <div className="flex">
                     <div className="flex flex-shrink-0 items-center">
-                      <Image
-                        height={32}
-                        width={32}
-                        className="block h-8 w-auto lg:hidden"
-                        src="/assets/logos/Izeat_Logo_Reduced_Purple.svg"
-                        alt="Your Company"
-                      />
-                      <Image
-                        height={32}
-                        width={32}
-                        className="hidden h-8 w-auto lg:block"
-                        src="/assets/logos/Izeat_Logo_Full_Purple.svg"
-                        alt="Your Company"
-                      />
+                      <Link href="/">
+                        <Image
+                          height={32}
+                          width={32}
+                          className="block h-8 w-auto lg:hidden"
+                          src="/assets/logos/Izeat_Logo_Reduced_Purple.svg"
+                          alt="Your Company"
+                        />
+                      </Link>
+                      <Link href="/">
+                        <Image
+                          height={32}
+                          width={32}
+                          className="hidden h-8 w-auto lg:block"
+                          src="/assets/logos/Izeat_Logo_Full_Purple.svg"
+                          alt="Your Company"
+                        />
+                      </Link>
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                       {appNav.map((item) => (
