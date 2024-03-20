@@ -22,10 +22,11 @@ export function MainLayout({ children }: PropsWithChildren) {
     supabase().auth.signOut();
     redirect("/");
   };
+
   const handleResize = () => {
     const vh = window.innerHeight * 0.01;
+
     document.documentElement.style.setProperty("--vh", `${vh}px`);
-    console.log("vh", vh);
   };
 
   if (typeof window !== "undefined") {
