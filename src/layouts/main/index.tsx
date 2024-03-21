@@ -156,7 +156,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                       <div>
                         <Button asChild className="w-full">
                           <Link href="/login" className="w-full">
-                            Login{" "}
+                            Login
                           </Link>
                         </Button>
                       </div>
