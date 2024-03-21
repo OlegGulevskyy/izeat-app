@@ -18,10 +18,11 @@ import { HeaderDesktop } from "~/components/header-nav/desktop";
 import { useAppParams } from "~/hooks/use-app-params";
 import { useTranslation } from "~/app/i18n/client";
 import { getLanguage } from "~/app/i18n/utils/get-language";
+import { useCurrentPath } from "~/hooks/use-current-path";
 
 export function MainLayout({ children }: PropsWithChildren) {
-  const pathName = usePathname();
-  const params = useAppParams()
+  const { pathWithoutLang } = useCurrentPath();
+  const params = useAppParams();
   const { user } = useUser();
   const { t } = useTranslation(getLanguage(params.lang), "common");
 
@@ -179,13 +180,13 @@ export function MainLayout({ children }: PropsWithChildren) {
                       <Disclosure.Button
                         key={item.name}
                         className={cn(
-                          item.href === pathName
+                          item.href === pathWithoutLang
                             ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                             : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
                           "block w-full border-l-4 py-2 pl-3 pr-4 text-base font-medium",
                         )}
                         aria-current={
-                          item.href === pathName ? "page" : undefined
+                          item.href === pathWithoutLang ? "page" : undefined
                         }
                       >
                         <Link
@@ -271,7 +272,9 @@ export function MainLayout({ children }: PropsWithChildren) {
                       <Button
                         className="flex w-full items-center gap-2"
                         variant={
-                          pathName === item.href ? "default" : "secondary"
+                          pathWithoutLang === item.href
+                            ? "default"
+                            : "secondary"
                         }
                       >
                         <item.icon className="h-8 w-6" />
