@@ -14,10 +14,16 @@ import { Button } from "~/components/ui/button";
 import { supabase } from "~/server/supabase/supabaseClient";
 import { POST_PRODUCT_PATH, appNav, userNav } from "~/constants/navigation";
 import { useUser } from "~/providers/AuthProvider/AuthProvider";
+import { HeaderDesktop } from "~/components/header-nav/desktop";
+import { useAppParams } from "~/hooks/use-app-params";
+import { useTranslation } from "~/app/i18n/client";
+import { getLanguage } from "~/app/i18n/utils/get-language";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
   const { user } = useUser();
+  const params = useAppParams()
+  const { t } = useTranslation(getLanguage(params.lang), "common");
 
   const signOut = () => {
     supabase().auth.signOut();
@@ -51,7 +57,7 @@ export function MainLayout({ children }: PropsWithChildren) {
                           width={32}
                           className="block h-8 w-auto lg:hidden"
                           src="/assets/logos/Izeat_Logo_Reduced_Purple.svg"
-                          alt="Your Company"
+                          alt="Izeat Logo"
                         />
                       </Link>
                       <Link href="/">
@@ -60,29 +66,11 @@ export function MainLayout({ children }: PropsWithChildren) {
                           width={32}
                           className="hidden h-8 w-auto lg:block"
                           src="/assets/logos/Izeat_Logo_Full_Purple.svg"
-                          alt="Your Company"
+                          alt="Izeat Logo"
                         />
                       </Link>
                     </div>
-                    <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                      {appNav.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className={cn(
-                            item.href === pathName
-                              ? "border-indigo-500 text-gray-900"
-                              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                            "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium",
-                          )}
-                          aria-current={
-                            item.href === pathName ? "page" : undefined
-                          }
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
+                    <HeaderDesktop />
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     {/* Notification button */}
@@ -294,7 +282,7 @@ export function MainLayout({ children }: PropsWithChildren) {
               ) : (
                 <div className="mx-auto w-full">
                   <Link href={POST_PRODUCT_PATH}>
-                    <Button className="w-full">Post product</Button>
+                    <Button className="w-full">{t("post_product")}</Button>
                   </Link>
                 </div>
               )}

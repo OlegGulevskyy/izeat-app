@@ -1,50 +1,49 @@
-import { match as matchLocale } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import acceptLanguage from "accept-language";
+import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
 
-import { i18nConfig } from "i18n.config";
-
-function getLocale(request: NextRequest): string | undefined {
-  // Negotiator expects plain object so we need to transform headers
-  const negotiatorHeaders: Record<string, string> = {};
-
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
-
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  const locales: string[] = i18nConfig.locales.slice();
-
-  return matchLocale(languages, locales, i18nConfig.defaultLocale);
-}
-
-export function middleware(request: NextRequest) {
-  // Skip next internal and image requests
-  if (
-    request.nextUrl.pathname.startsWith("/_next") ||
-    request.nextUrl.pathname.includes("/api/") ||
-    /\.(.*)$/.test(request.nextUrl.pathname)
-  ) {
-    return;
-  }
-
-  // Check if there is any supported locale in the pathname
-  const pathname = request.nextUrl.pathname;
-  const pathnameIsMissingLocale = i18nConfig.locales.every(
-    (locale) =>
-      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
-  );
-
-  // Let's redirect if there is no locale
-  if (pathnameIsMissingLocale) {
-    const locale = getLocale(request);
-
-    return NextResponse.redirect(
-      new URL(`/${locale}/${pathname}`, request.url),
-    );
-  }
-}
+acceptLanguage.languages(languages);
 
 export const config = {
-  // Matcher ignoring `/_next/` and `/api/`
-  matcher: ["/((?!api|_next/static|_next/image).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)"],
 };
+
+export function middleware(req: NextRequest) {
+  if (
+    req.nextUrl.pathname.indexOf("icon") > -1 ||
+    req.nextUrl.pathname.indexOf("chrome") > -1
+  )
+    return NextResponse.next();
+  let lng;
+
+  if (req.cookies.has(cookieName))
+    lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
+
+  if (!lng) lng = acceptLanguage.get(req.headers.get("Accept-Language"));
+
+  if (!lng) lng = fallbackLng;
+
+  // Redirect if lng in path is not supported
+  if (
+    !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
+    !req.nextUrl.pathname.startsWith("/_next")
+  ) {
+    return NextResponse.redirect(
+      new URL(`/${lng}${req.nextUrl.pathname}`, req.url),
+    );
+  }
+
+  if (req.headers.has("referer")) {
+    const refererUrl = new URL(req.headers.get("referer") ?? "");
+    const lngInReferer = languages.find((l) =>
+      refererUrl.pathname.startsWith(`/${l}`),
+    );
+    const response = NextResponse.next();
+
+    if (lngInReferer) response.cookies.set(cookieName, lngInReferer);
+
+    return response;
+  }
+
+  return NextResponse.next();
+}

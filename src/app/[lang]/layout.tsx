@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { Roboto } from "next/font/google";
+import { dir } from "i18next";
 
 import { TailwindIndicator } from "~/components/tw-indicator";
 import { Providers } from "~/providers";
@@ -9,26 +10,32 @@ import { getServerUser } from "~/utils/auth";
 import { AuthProvider } from "~/providers/AuthProvider/AuthProvider";
 import { TRPCReactProvider } from "~/trpc/react";
 import { MainLayout } from "~/layouts/main";
+import { languages } from "~/app/i18n/settings";
 
 import "~/styles/globals.css";
 import st from "./layout.module.css";
-
-export const metadata = {
-  title: "Izeat",
-  description: "Share good food with good people",
-};
 
 const font = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
   subsets: ["latin"],
 });
 
-async function RootLayout({ children }: { children: React.ReactNode }) {
+export async function generateStaticParams() {
+  return languages.map((lng) => ({ lng }));
+}
+
+async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { lang: string };
+}) {
   const user = await getServerUser();
 
   return (
     <>
-      <html lang="en">
+      <html lang={params.lang} dir={dir(params.lang)}>
         <head />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <body
