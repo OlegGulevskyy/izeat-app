@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+
+import { appNav } from "~/constants/navigation";
+import { useAppParams } from "~/hooks/use-app-params";
+import { cn } from "~/utils/cn";
 import { useTranslation } from "~/app/i18n/client";
 import { getLanguage } from "~/app/i18n/utils/get-language";
 
-import { appNav } from "~/constants/navigation";
-import { cn } from "~/utils/cn";
-
 export const HeaderDesktop = () => {
   const pathName = usePathname();
-  const params = useParams<{ lang: string }>();
+  const params = useAppParams();
   const { t } = useTranslation(getLanguage(params.lang), "common");
 
   return (

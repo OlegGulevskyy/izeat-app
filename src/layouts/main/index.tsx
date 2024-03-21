@@ -21,8 +21,8 @@ import { getLanguage } from "~/app/i18n/utils/get-language";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const pathName = usePathname();
-  const { user } = useUser();
   const params = useAppParams()
+  const { user } = useUser();
   const { t } = useTranslation(getLanguage(params.lang), "common");
 
   const signOut = () => {
