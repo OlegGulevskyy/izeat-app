@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { settingsNav } from "~/constants/navigation";
+import { useCurrentPath } from "~/hooks/use-current-path";
 
 const SettingsLayout = ({ children }: PropsWithChildren) => {
-  const pathName = usePathname();
+  const { pathWithoutLang } = useCurrentPath();
 
   return (
     <div>
@@ -20,7 +20,9 @@ const SettingsLayout = ({ children }: PropsWithChildren) => {
               <li key={item.name}>
                 <Link
                   href={item.href}
-                  className={pathName === item.href ? "text-indigo-400" : ""}
+                  className={
+                    pathWithoutLang === item.href ? "text-indigo-400" : ""
+                  }
                 >
                   {item.name}
                 </Link>
