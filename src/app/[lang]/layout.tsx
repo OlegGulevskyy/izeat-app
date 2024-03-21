@@ -20,6 +20,8 @@ const font = Roboto({
   subsets: ["latin"],
 });
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
