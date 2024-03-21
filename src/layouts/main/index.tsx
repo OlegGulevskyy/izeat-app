@@ -140,7 +140,13 @@ export function MainLayout({ children }: PropsWithChildren) {
                                 </Menu.Item>
                               ))}
                               <Menu.Item>
-                                <Button>Sign out</Button>
+                                <Link
+                                  href={"#"}
+                                  className="block px-4 py-2 text-sm text-gray-700"
+                                  onClick={signOut}
+                                >
+                                  Sign out
+                                </Link>
                               </Menu.Item>
                             </Menu.Items>
                           </Transition>
