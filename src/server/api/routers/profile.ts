@@ -27,6 +27,7 @@ export const profileRouter = createTRPCRouter({
           fullName: input.fullName,
           avatarUrl: input.avatarUrl,
           languagePreference: input.langPref,
+          updatedAt: new Date(),
         },
       });
     }),
