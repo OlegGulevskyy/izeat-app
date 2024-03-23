@@ -24,30 +24,8 @@ model AuditLogEntries {
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model FlowState {
-  id                   String              @id @db.Uuid
-  userId               String?             @map("user_id") @db.Uuid
-  authCode             String              @map("auth_code")
-  codeChallengeMethod  CodeChallengeMethod @map("code_challenge_method")
-  codeChallenge        String              @map("code_challenge")
-  providerType         String              @map("provider_type")
-  providerAccessToken  String?             @map("provider_access_token")
-  providerRefreshToken String?             @map("provider_refresh_token")
-  createdAt            DateTime?           @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime?           @map("updated_at") @db.Timestamptz(6)
-  authenticationMethod String              @map("authentication_method")
-  samlRelayStates      SamlRelayStates[]
-
-  @@index([authCode], map: "idx_auth_code")
-  @@index([userId, authenticationMethod], map: "idx_user_id_auth_method")
-  @@index([createdAt(sort: Desc)])
-  @@map("flow_state")
-  @@schema("auth")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Identities {
-  providerId   String    @map("provider_id")
+  id           String
   userId       String    @map("user_id") @db.Uuid
   identityData Json      @map("identity_data")
   provider     String
@@ -55,10 +33,9 @@ model Identities {
   createdAt    DateTime? @map("created_at") @db.Timestamptz(6)
   updatedAt    DateTime? @map("updated_at") @db.Timestamptz(6)
   email        String?   @default(dbgenerated("lower((identity_data ->> 'email'::text))"))
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   users        Users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@unique([providerId, provider], map: "identities_provider_id_provider_unique")
+  @@id([provider, id])
   @@index([email])
   @@index([userId])
   @@map("identities")
@@ -100,7 +77,6 @@ model MfaChallenges {
   ipAddress  String     @map("ip_address") @db.Inet
   mfaFactors MfaFactors @relation(fields: [factorId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mfa_challenges_auth_factor_id_fkey")
 
-  @@index([createdAt(sort: Desc)], map: "mfa_challenge_created_at_idx")
   @@map("mfa_challenges")
   @@schema("auth")
 }
@@ -119,7 +95,6 @@ model MfaFactors {
   users         Users           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([userId, createdAt], map: "factor_id_created_at_idx")
-  @@index([userId])
   @@map("mfa_factors")
   @@schema("auth")
 }
@@ -141,7 +116,7 @@ model RefreshTokens {
   @@index([instanceId, userId])
   @@index([parent])
   @@index([sessionId, revoked])
-  @@index([updatedAt(sort: Desc)])
+  @@index([token])
   @@map("refresh_tokens")
   @@schema("auth")
 }
@@ -172,15 +147,13 @@ model SamlRelayStates {
   requestId     String       @map("request_id")
   forEmail      String?      @map("for_email")
   redirectTo    String?      @map("redirect_to")
+  fromIpAddress String?      @map("from_ip_address") @db.Inet
   createdAt     DateTime?    @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime?    @map("updated_at") @db.Timestamptz(6)
-  flowStateId   String?      @map("flow_state_id") @db.Uuid
-  flowState     FlowState?   @relation(fields: [flowStateId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   ssoProviders  SsoProviders @relation(fields: [ssoProviderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([forEmail])
   @@index([ssoProviderId])
-  @@index([createdAt(sort: Desc)])
   @@map("saml_relay_states")
   @@schema("auth")
 }
@@ -202,17 +175,12 @@ model Sessions {
   factorId      String?         @map("factor_id") @db.Uuid
   aal           AalLevel?       @map("aal")
   notAfter      DateTime?       @map("not_after") @db.Timestamptz(6)
-  refreshedAt   DateTime?       @map("refreshed_at") @db.Timestamp(6)
-  userAgent     String?         @map("user_agent")
-  ip            String?         @db.Inet
-  tag           String?
   mfaAmrClaims  MfaAmrClaims[]
   refreshTokens RefreshTokens[]
   users         Users           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([userId])
   @@index([userId, createdAt], map: "user_id_created_at_idx")
-  @@index([notAfter(sort: Desc)])
   @@map("sessions")
   @@schema("auth")
 }
@@ -274,9 +242,9 @@ model Users {
   isSuperAdmin             Boolean?     @map("is_super_admin")
   createdAt                DateTime?    @map("created_at") @db.Timestamptz(6)
   updatedAt                DateTime?    @map("updated_at") @db.Timestamptz(6)
-  phone                    String?      @unique
+  phone                    String?      @unique @db.VarChar(15)
   phoneConfirmedAt         DateTime?    @map("phone_confirmed_at") @db.Timestamptz(6)
-  phoneChange              String?      @default("") @map("phone_change")
+  phoneChange              String?      @default("") @map("phone_change") @db.VarChar(15)
   phoneChangeToken         String?      @default("") @map("phone_change_token") @db.VarChar(255)
   phoneChangeSentAt        DateTime?    @map("phone_change_sent_at") @db.Timestamptz(6)
   confirmedAt              DateTime?    @default(dbgenerated("LEAST(email_confirmed_at, phone_confirmed_at)")) @map("confirmed_at") @db.Timestamptz(6)
@@ -286,16 +254,29 @@ model Users {
   reauthenticationToken    String?      @default("") @map("reauthentication_token") @db.VarChar(255)
   reauthenticationSentAt   DateTime?    @map("reauthentication_sent_at") @db.Timestamptz(6)
   isSsoUser                Boolean      @default(false) @map("is_sso_user")
-  deletedAt                DateTime?    @map("deleted_at") @db.Timestamptz(6)
-  isAnonymous              Boolean      @default(false) @map("is_anonymous")
   identities               Identities[]
   mfaFactors               MfaFactors[]
   sessions                 Sessions[]
+  profiles                 Profiles?
 
   @@index([instanceId])
-  @@index([isAnonymous])
   @@map("users")
   @@schema("auth")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Profiles {
+  id                 String    @id @db.Uuid
+  updatedAt          DateTime? @map("updated_at") @db.Timestamptz(6)
+  createdAt          DateTime? @map("created_at") @db.Timestamptz(6)
+  email              String?   @unique
+  fullName           String?   @map("full_name")
+  avatarUrl          String?   @map("avatar_url")
+  languagePreference String?   @map("language_preference")
+  users              Users     @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("profiles")
+  @@schema("public")
 }
 
 enum AalLevel {
@@ -304,14 +285,6 @@ enum AalLevel {
   aal3
 
   @@map("aal_level")
-  @@schema("auth")
-}
-
-enum CodeChallengeMethod {
-  s256
-  plain
-
-  @@map("code_challenge_method")
   @@schema("auth")
 }
 

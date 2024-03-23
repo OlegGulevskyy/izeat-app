@@ -3,12 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Image from "next/image";
 
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,42 +18,44 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { toast } from "~/components/ui/use-toast";
-import Image from "next/image";
 
 const FormSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
-  }),
-
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
+  fullName: z.string().min(2, {
+    message: "Full name must be at least 2 characters.",
   }),
 
   picture: z.string(),
 });
 
 export function ProfileSettingsView() {
-  const { data } = api.auth.getProfile.useQuery();
-  const userData = data?.rawUserMetaData as { name: string; picture: string };
-  const firstName = userData.name.split(" ")[0];
-  const lastName = userData.name.split(" ")[1];
+  const { data } = api.profile.get.useQuery();
+  const { mutateAsync: updateProfile } =
+    api.profile.updateProfile.useMutation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      firstName: firstName ?? "",
-      lastName: lastName ?? "",
-      picture: userData.picture,
+      fullName: data?.fullName ?? "",
+      picture: data?.avatarUrl ?? "",
     },
   });
 
-  function onSubmit(_: z.infer<typeof FormSchema>) {
-    toast({
-      title: "Success!",
-      description: "Profile settings saved!",
-    });
+  function onSubmit(formData: z.infer<typeof FormSchema>) {
+    updateProfile(formData)
+      .then(() => {
+        toast({
+          title: "Success!",
+          description: "Profile settings saved!",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Something went wrong!",
+          description:
+            err.message ?? "An error occurred while updating profile.",
+        });
+      });
   }
-
   return (
     <Form {...form}>
       <form
@@ -84,31 +88,19 @@ export function ProfileSettingsView() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
-          name="firstName"
+          name="fullName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First name</FormLabel>
+              <FormLabel>Full name</FormLabel>
               <FormControl>
-                <Input placeholder="John" {...field} />
+                <Input placeholder="John Doe" {...field} />
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last name</FormLabel>
-              <FormControl>
-                <Input placeholder="Doe" {...field} />
-              </FormControl>
-              <FormMessage />
+              <FormDescription>
+                This is how other users will see you on <b>Izeat</b>.
+              </FormDescription>
             </FormItem>
           )}
         />
