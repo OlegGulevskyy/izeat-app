@@ -1,9 +1,11 @@
 create table "public"."profiles" (
     "id" uuid not null,
     "updated_at" timestamp with time zone,
+    "created_at" timestamp with time zone,
     "email" text,
     "full_name" text,
-    "avatar_url" text
+    "avatar_url" text,
+    "language_preference" text
 );
 
 
@@ -29,8 +31,8 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
  SECURITY DEFINER
 AS $function$
 begin
-  insert into public.profiles (id, full_name, email)
-  values (new.id, new.raw_user_meta_data->>'full_name', new.email);
+  insert into public.profiles (id, full_name, email, avatar_url, created_at, updated_at)
+  values (new.id, new.raw_user_meta_data->>'full_name', new.email, new.raw_user_meta_data->>'avatar_url', now(), now());
   return new;
 end;
 $function$
@@ -38,7 +40,7 @@ $function$
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
-  
+
 create policy "Public profiles are viewable by everyone."
 on "public"."profiles"
 as permissive
@@ -61,6 +63,5 @@ as permissive
 for update
 to public
 using ((auth.uid() = id));
-
 
 

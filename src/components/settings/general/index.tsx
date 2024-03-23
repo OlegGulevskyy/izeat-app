@@ -27,8 +27,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { toast } from "~/components/ui/use-toast";
 import Image from "next/image";
+import { useAppParams } from "~/hooks/use-app-params";
+import { useRouter } from "next/navigation";
+import { toast } from "~/components/ui/use-toast";
+import { api } from "~/trpc/react";
 
 const languages = [
   { label: "English", value: "en", svgIcon: "/assets/icons/en-gb.svg" },
@@ -42,17 +45,27 @@ const FormSchema = z.object({
 });
 
 export function GeneralSettingsView() {
+  const params = useAppParams();
+  const router = useRouter();
+  const { mutateAsync: updatePreferences } =
+    api.profile.updateProfile.useMutation();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      language: params.lang,
+    },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    const lang = data.language;
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.replace(params.lang, lang);
+    router.replace(newPath);
+    updatePreferences({ langPref: lang }); // silently update language preference
     toast({
-      title: "Language saved!",
-      variant: "default",
-      description:
-        "Language preference saved to: " +
-        languages.find((l) => l.value === data.language)?.label,
+      title: "Preferences updated",
+      description: "Your language has been updated.",
     });
   }
 
@@ -94,7 +107,7 @@ export function GeneralSettingsView() {
                       placeholder="Search language..."
                       className="h-9"
                     />
-                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandEmpty>No language found.</CommandEmpty>
                     <CommandGroup>
                       {languages.map((language) => (
                         <CommandItem

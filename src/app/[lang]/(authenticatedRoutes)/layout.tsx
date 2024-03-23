@@ -5,7 +5,7 @@ import { PrivateRoute } from "~/components/private-route/private-route";
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <PrivateRoute>
-      <PrefetchTRPCQuery queryName="auth.getProfile">
+      <PrefetchTRPCQuery queryName="profile.get">
         {children}
       </PrefetchTRPCQuery>
     </PrivateRoute>

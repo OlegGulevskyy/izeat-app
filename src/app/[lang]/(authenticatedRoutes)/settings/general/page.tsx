@@ -1,11 +1,7 @@
 import { GeneralSettingsView } from "~/components/settings/general";
 
 const GeneralSettings = () => {
-  return (
-    <div>
-      <GeneralSettingsView />
-    </div>
-  );
+  return <GeneralSettingsView />;
 };
 
 export default GeneralSettings;
