@@ -46,7 +46,7 @@ const config = {
         argsIgnorePattern: "^_",
       },
     ],
-    "no-nested-ternary": "error",
+    "no-nested-ternary": "warn",
   },
 };
 

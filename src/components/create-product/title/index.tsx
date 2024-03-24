@@ -35,7 +35,10 @@ export function CreateProductTitleView() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mt-8 w-full space-y-6"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -54,7 +57,7 @@ export function CreateProductTitleView() {
           )}
         />
         <Link href={getNextStepHref() ?? "#"}>
-          <Button className="w-full mt-8">Save and continue</Button>
+          <Button className="mt-8 w-full">Save and continue</Button>
         </Link>
       </form>
     </Form>
