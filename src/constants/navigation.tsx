@@ -8,7 +8,7 @@ import { MessageCircleIcon } from "lucide-react";
 const SETTINGS_ROUTE_PATH = "/settings";
 
 export const appNav = [
-  { name: "Home", href: "/", icon: HomeIcon },
+  { name: "Home", href: "/#", icon: HomeIcon, isHome: true },
   {
     name: "Messages",
     href: "/messages",
@@ -38,3 +38,9 @@ export const settingsNav = [
   { name: "Profile", href: SETTINGS_ROUTE_PATH + "/profile" },
   { name: "Billing", href: SETTINGS_ROUTE_PATH + "/billing" },
 ];
+
+export const CREATE_PRODUCT_PATH = "/products/new";
+export const CREATE_PRODUCT_TITLE_PATH = CREATE_PRODUCT_PATH + "/title";
+export const CREATE_PRODUCT_DESCRIBE_PATH = CREATE_PRODUCT_PATH + "/describe";
+export const CREATE_PRODUCT_PHOTO_PATH = CREATE_PRODUCT_PATH + "/photo";
+export const CREATE_PRODUCT_ADDRESS_PATH = CREATE_PRODUCT_PATH + "/address";

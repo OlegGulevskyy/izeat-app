@@ -271,7 +271,8 @@ export function MainLayout({ children }: PropsWithChildren) {
                       <Button
                         className="flex w-full items-center gap-2"
                         variant={
-                          pathWithoutLang === item.href
+                          pathWithoutLang.includes(item.href) ||
+                          (item.isHome && pathWithoutLang === "/")
                             ? "default"
                             : "secondary"
                         }
